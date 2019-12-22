@@ -6,11 +6,11 @@ def read(fname):
 
 setup(
     name = "zbxsend",
-    version = "0.1.6",
+    version = "0.1.7",
     author = "Sergey Kirillov",
     author_email = "sergey.kirillov@gmail.com",
     description = ("Module used to send metrics to Zabbix."),
-    url='https://github.com/pistolero/zbxsend',
+    url='https://github.com/markkuleinio/zbxsend',
     license = "BSD",
     py_modules=['zbxsend'],
     long_description=read('README.txt'),
