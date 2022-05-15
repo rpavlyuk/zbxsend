@@ -35,7 +35,6 @@ def send_to_zabbix(metrics, zabbix_host='127.0.0.1', zabbix_port=10051, timeout=
         else:
             clock = m.clock
             ns = m.ns
-        clock = m.clock or time.time()
         metrics_data.append(('\t\t{\n'
                              '\t\t\t"host":%s,\n'
                              '\t\t\t"key":%s,\n'
