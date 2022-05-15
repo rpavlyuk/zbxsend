@@ -9,16 +9,17 @@ except:
 
 
 class Metric(object):
-    def __init__(self, host, key, value, clock=None):
+    def __init__(self, host, key, value, clock=None, ns=None):
         self.host = host
         self.key = key
         self.value = value
         self.clock = clock
+        self.ns = ns
 
     def __repr__(self):
         if self.clock is None:
             return 'Metric(%r, %r, %r)' % (self.host, self.key, self.value)
-        return 'Metric(%r, %r, %r, %r)' % (self.host, self.key, self.value, self.clock)
+        return 'Metric(%r, %r, %r, %r, %r)' % (self.host, self.key, self.value, self.clock, self.ns)
 
 def send_to_zabbix(metrics, zabbix_host='127.0.0.1', zabbix_port=10051, timeout=15):
     """Send set of metrics to Zabbix server.""" 
@@ -27,12 +28,20 @@ def send_to_zabbix(metrics, zabbix_host='127.0.0.1', zabbix_port=10051, timeout=
     # Zabbix has very fragile JSON parser, and we cannot use json to dump whole packet
     metrics_data = []
     for m in metrics:
+        if not m.clock:
+            i = time.time_ns()
+            clock = i // 1000000000
+            ns = i % 1000000000
+        else:
+            clock = m.clock
+            ns = m.ns
         clock = m.clock or time.time()
         metrics_data.append(('\t\t{\n'
                              '\t\t\t"host":%s,\n'
                              '\t\t\t"key":%s,\n'
                              '\t\t\t"value":%s,\n'
-                             '\t\t\t"clock":%s}') % (j(m.host), j(m.key), j(m.value), clock))
+                             '\t\t\t"clock":%s,\n'
+                             '\t\t\t"ns":%s}') % (j(m.host), j(m.key), j(m.value), clock, ns))
     json_data = ('{\n'
            '\t"request":"sender data",\n'
            '\t"data":[\n%s]\n'
