@@ -2,10 +2,7 @@ import struct
 import time
 import socket
 import logging
-try:
-    import json
-except:
-    import simplejson as json
+import json
 
 
 class Metric(object):
