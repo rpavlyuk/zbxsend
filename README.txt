@@ -1,5 +1,6 @@
 Originally by Sergey Kirillov (https://github.com/pistolero/zbxsend),
-modifications for Python 3 usage by Markku Leiniö in 2019.
+further modified (Python 3 and other changes) by Markku Leiniö in 2019
+and later.
 
 =====
 Usage
