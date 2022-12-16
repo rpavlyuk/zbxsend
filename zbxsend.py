@@ -3,10 +3,18 @@ import time
 import socket
 import logging
 import json
+from typing import List, Optional, Union
 
 
 class Metric:
-    def __init__(self, host, key, value, clock=None, ns=None):
+    def __init__(
+        self,
+        host: str,
+        key: str,
+        value: Union[str, int, float],
+        clock: Optional[int] = None,
+        ns: Optional[int] = None,
+    ):
         self.host = host
         self.key = key
         self.value = value
@@ -18,7 +26,12 @@ class Metric:
             return 'Metric(%r, %r, %r)' % (self.host, self.key, self.value)
         return 'Metric(%r, %r, %r, %r, %r)' % (self.host, self.key, self.value, self.clock, self.ns)
 
-def send_to_zabbix(metrics, zabbix_host='127.0.0.1', zabbix_port=10051, timeout=15):
+def send_to_zabbix(
+    metrics: List[Metric],
+    zabbix_host: str = "127.0.0.1",
+    zabbix_port: int = 10051,
+    timeout: int = 15,
+) -> bool:
     """Send set of metrics to Zabbix server.""" 
     
     j = json.dumps
@@ -79,7 +92,7 @@ def send_to_zabbix(metrics, zabbix_host='127.0.0.1', zabbix_port=10051, timeout=
 
 logger = logging.getLogger('zbxsender') 
 
-def _recv_all(sock, count):
+def _recv_all(sock: socket.socket, count: int) -> bytes:
     buf = b''
     while len(buf)<count:
         chunk = sock.recv(count-len(buf))
