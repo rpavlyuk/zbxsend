@@ -26,6 +26,7 @@ class Metric:
             return f"Metric({self.host}, {self.key}, {self.value})"
         return f"Metric({self.host}, {self.key}, {self.value}, {self.clock}, {self.ns})"
 
+
 def send_to_zabbix(
     metrics: List[Metric],
     zabbix_host: str = "127.0.0.1",
@@ -85,19 +86,19 @@ def send_to_zabbix(
         zabbix.close()
 
 
-
 logger = logging.getLogger('zbxsender') 
+
 
 def _recv_all(sock: socket.socket, count: int) -> bytes:
     buf = b''
-    while len(buf)<count:
-        chunk = sock.recv(count-len(buf))
+    while len(buf) < count:
+        chunk = sock.recv(count - len(buf))
         if not chunk:
             return buf
         buf += chunk
     return buf
 
-    
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     send_to_zabbix([Metric('localhost', 'bucks_earned', 99999)], 'localhost', 10051)
