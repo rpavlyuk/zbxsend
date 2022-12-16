@@ -5,7 +5,7 @@ import logging
 import json
 
 
-class Metric(object):
+class Metric:
     def __init__(self, host, key, value, clock=None, ns=None):
         self.host = host
         self.key = key
