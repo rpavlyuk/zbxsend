@@ -33,9 +33,6 @@ def send_to_zabbix(
     timeout: int = 15,
 ) -> bool:
     """Send set of metrics to Zabbix server.""" 
-    
-    j = json.dumps
-    # Zabbix has very fragile JSON parser, and we cannot use json to dump whole packet
     metrics_data = []
     for m in metrics:
         if not m.clock:
@@ -45,17 +42,16 @@ def send_to_zabbix(
         else:
             clock = m.clock
             ns = m.ns
-        metrics_data.append(('\t\t{\n'
-                             '\t\t\t"host":%s,\n'
-                             '\t\t\t"key":%s,\n'
-                             '\t\t\t"value":%s,\n'
-                             '\t\t\t"clock":%s,\n'
-                             '\t\t\t"ns":%s}') % (j(m.host), j(m.key), j(m.value), clock, ns))
-    json_data = ('{\n'
-           '\t"request":"sender data",\n'
-           '\t"data":[\n%s]\n'
-           '}') % (',\n'.join(metrics_data))
-
+        metrics_data.append(
+            {
+                "host": m.host,
+                "key": m.key,
+                "value": str(m.value),
+                "clock": clock,
+                "ns": ns,
+            }
+        )
+    json_data = json.dumps({"request": "sender data", "data": metrics_data})
     data_len = struct.pack('<Q', len(json_data))
     packet = b'ZBXD\1' + data_len + json_data.encode()
     try:
