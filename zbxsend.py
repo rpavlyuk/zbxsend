@@ -23,8 +23,8 @@ class Metric:
 
     def __repr__(self):
         if self.clock is None:
-            return 'Metric(%r, %r, %r)' % (self.host, self.key, self.value)
-        return 'Metric(%r, %r, %r, %r, %r)' % (self.host, self.key, self.value, self.clock, self.ns)
+            return f"Metric({self.host}, {self.key}, {self.value})"
+        return f"Metric({self.host}, {self.key}, {self.value}, {self.clock}, {self.ns})"
 
 def send_to_zabbix(
     metrics: List[Metric],
