@@ -52,7 +52,11 @@ def send_to_zabbix(
                 "ns": ns,
             }
         )
-    json_data = json.dumps({"request": "sender data", "data": metrics_data})
+    json_data = json.dumps(
+        {"request": "sender data", "data": metrics_data},
+        ensure_ascii=False,
+        separators=(",", ":"),  # Remove spaces, to emulate zabbix_sender behaviour
+    )
     data_len = struct.pack('<Q', len(json_data))
     packet = b'ZBXD\1' + data_len + json_data.encode()
     try:
