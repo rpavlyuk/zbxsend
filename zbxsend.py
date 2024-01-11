@@ -43,11 +43,19 @@ def send_to_zabbix(
         else:
             clock = m.clock
             ns = m.ns
+
+        # Check if m.value is a JSON string and parse it
+        try:
+            value = json.loads(m.value)  # Try to parse as JSON
+            logger.debug("Metric payload is a valid JSON. Parsing succeeded!")
+        except json.JSONDecodeError:
+            value = str(m.value)  # Not a JSON string, use as-is
+
         metrics_data.append(
             {
                 "host": m.host,
                 "key": m.key,
-                "value": str(m.value),
+                "value": value,
                 "clock": clock,
                 "ns": ns,
             }
